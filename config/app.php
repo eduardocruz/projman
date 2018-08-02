@@ -150,6 +150,9 @@ return [
         /*
          * Package Service Providers...
          */
+	    Laravel\Socialite\SocialiteServiceProvider::class,
+	    SocialiteProviders\Manager\ServiceProvider::class,
+	    SocialiteProviders\Generators\GeneratorsServiceProvider::class,
 
         /*
          * Application Service Providers...

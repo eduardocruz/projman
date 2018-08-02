@@ -14,6 +14,12 @@ return [
     |
     */
 
+	'upwork' => [
+		'key' => env('UPWORK_KEY'),
+		'secret' => env('UPWORK_SECRET'),
+		'redirect' => env('UPWORK_REDIRECT_URI'),
+	],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

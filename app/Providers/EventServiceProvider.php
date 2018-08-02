@@ -13,6 +13,9 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
+	    \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+		    'SocialiteProviders\\Upwork\\UpworkExtendSocialite@handle',
+	    ],
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],

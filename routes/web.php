@@ -15,7 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/upworkcallback', 'Auth\LoginController@handleProviderCallback');
 
 Route::get('login/upwork', 'Auth\LoginController@redirectToProvider');
-Route::get('login/upwork/callback', 'Auth\LoginController@handleProviderCallback');
+Route::get('api/upwork/callback', 'Auth\LoginController@handleProviderCallback');

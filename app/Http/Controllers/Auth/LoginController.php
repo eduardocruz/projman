@@ -55,8 +55,11 @@ class LoginController extends Controller
 	 */
 	public function handleProviderCallback()
 	{
+		dump('handleProviderCallback');
 		$user = Socialite::driver('upwork')->user();
-		return $user->token;
+		dump('USER', $user);
+		//dump('USER->TOKEN', $user->token);
+		return (array) $user;
 		// $user->token;
 	}
 }

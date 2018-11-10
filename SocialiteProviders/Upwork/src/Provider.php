@@ -18,13 +18,13 @@ class Provider extends AbstractProvider
      */
     public function user()
     {
-    	Log::info('USER Started');
+    	dump('USER started 3');
         if (! $this->hasNecessaryVerifier()) {
             throw new \InvalidArgumentException("Invalid request. Missing OAuth verifier.");
         }
 
 		$token = $this->getToken();
-
+	    dump('Token', $token);
 		$access_token = $token['tokenCredentials']->getIdentifier();
 	    $access_secret = $token['tokenCredentials']->getSecret();
 	    $oauth_token = request()->query('oauth_token');
@@ -49,18 +49,24 @@ class Provider extends AbstractProvider
 		    )
 	    );
 
+	    dump('Config', $config);
 	    $client = new \Upwork\API\Client($config);
 
-	    if (empty($_SESSION['request_token']) && empty(['access_token'])) {
-		    // we need to get and save the request token. It will be used again
+	    if (empty($_SESSION['request_token']) && empty($_SESSION['access_token'])) {
+
+	    	// we need to get and save the request token. It will be used again
 		    // after the redirect from the Upwork site
 		    $requestTokenInfo = $client->getRequestToken();
 
 		    $_SESSION['request_token']  = $requestTokenInfo['oauth_token'];
 		    $_SESSION['request_secret'] = $requestTokenInfo['oauth_token_secret'];
-		    $client->auth();
+		    dump($_SESSION['request_token'], $_SESSION['request_secret']);
+		    $client_auth = $client->auth();
+		    dump('client->auth()', $client_auth);
+		    $_SESSION['access_token'] = $client_auth['access_token'];
+		    $_SESSION['access_secret'] = $client_auth['access_secret'];
 	    } elseif (empty($_SESSION['access_token'])) {
-		    //dd('B');
+		    dump('access token is empty', $_SESSION['access_token']);
 		    // the callback request should be pointed to this script as well as
 		    // the request access token after the callback
 		    $accessTokenInfo = $client->auth();
@@ -74,7 +80,9 @@ class Provider extends AbstractProvider
 		// keeps the access token in a secure place
 
 	    // if authenticated
+	    dump('Before access_token');
 	    if ($_SESSION['access_token']) {
+		    dump('Inside access_token: ', $_SESSION['access_token']);
 		    // clean up session data
 		    unset($_SESSION['request_token']);
 		    unset($_SESSION['request_secret']);
@@ -82,13 +90,21 @@ class Provider extends AbstractProvider
 		    // gets info of the authenticated user
 		    $auth = new \Upwork\API\Routers\Auth($client);
 		    $info = $auth->getUserInfo();
-
+			dump('info', $info);
 		    //print_r($info);
 	    }
 
-        $user = $this->server->getUserDetails($token = $this->getToken());
+	    //dump('$this', $this);
 
+	    //dump('$this->server', $this->server);
 
+	    //dump('$this->getToken()', $this->getToken());
+
+        //$user = $this->server->getUserDetails($token = $this->getToken());
+	    //$user = $info;
+	    return $info;
+	    dump('user', $user);
+/*
         return (new User())->setRaw($user->extra)->map([
             'id'       => $user->id,
             'nickname' => $user->nickname,
@@ -96,5 +112,6 @@ class Provider extends AbstractProvider
             'email'    => $user->email,
             'avatar'   => $user->avatar,
         ])->setToken($token->getIdentifier(), $token->getSecret());
+*/
     }
 }
